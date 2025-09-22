@@ -24,6 +24,20 @@ jobs:
           cache: "npm"
           cache-dependency-path: app/electron/package-lock.json
 
+    
+      - name: Enable pnpm
+        run: corepack enable
+             
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+          cache-dependency-path: pnpm-lock.yaml
+      
+
+
+
       - name: Install dependencies
         run: npm install
 
