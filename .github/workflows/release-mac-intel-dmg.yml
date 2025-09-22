@@ -25,19 +25,19 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - name: Install dependencies
-        working-directory: app/electron
+        working-directory: apps/electron
         run: pnpm install --frozen-lockfile
 
       - name: Build and Make DMG
-        working-directory: app/electron
+        working-directory: apps/electron
         run: pnpm make
 
       - name: Find DMG
         id: find_dmg
         run: |
-          DMG_PATH=$(find app/electron/out/make/ -name "*.dmg" | head -n 1)
+          DMG_PATH=$(find apps/electron/out/make/ -name "*.dmg" | head -n 1)
           if [ -z "$DMG_PATH" ]; then
-            echo "No DMG found in app/electron/out/make/"
+            echo "No DMG found in apps/electron/out/make/"
             exit 1
           fi
           echo "dmg=$DMG_PATH" >> $GITHUB_OUTPUT
