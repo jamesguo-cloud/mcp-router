@@ -11,38 +11,27 @@ jobs:
     runs-on: macos-13   # Intel 芯片环境
     defaults:
       run:
-        working-directory: app/electron  # workflow 在 electron 子目录运行
+        working-directory: app/electron
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "npm"
-          cache-dependency-path: app/electron/package-lock.json
-
-    
       - name: Enable pnpm
         run: corepack enable
-             
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
-      
-
-
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install --frozen-lockfile
 
       - name: Build and Make DMG
-        run: npm run make
+        run: pnpm make
 
       - name: Find DMG
         id: find_dmg
