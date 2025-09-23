@@ -5,10 +5,12 @@ on:
     tags:
       - "v*"
   workflow_dispatch:   # 手动触发，方便调试
-
+ 
 jobs:
   build-mac-dmg:
-    runs-on: macos-13   # Intel 芯片环境
+    runs-on: macos-13
+    env:
+      CI: true   # 🔧 这里设置
 
     steps:
       - name: Checkout repo
