@@ -1,16 +1,21 @@
-name: Build macOS Intel DMG
+name: Build macOS Intel DMG (Signed & Notarized)
 
 on:
   push:
     tags:
       - "v*"
   workflow_dispatch:   # 手动触发，方便调试
- 
+
 jobs:
   build-mac-dmg:
     runs-on: macos-13
     env:
-      CI: true   # 🔧 这里设置
+      CI: true
+      CSC_LINK: ${{ secrets.MAC_CERT_P12_BASE64 }}
+      CSC_KEY_PASSWORD: ${{ secrets.MAC_CERT_PWD }}
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_PWD }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
     steps:
       - name: Checkout repo
@@ -26,11 +31,9 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
-      # 在 monorepo 根目录安装，保证 workspace:* 的依赖能被 link
       - name: Install dependencies (workspace root)
         run: pnpm install --frozen-lockfile
 
-      # 编译所有 workspace 包，解决 TS2307 报错
       - name: Build workspace packages
         run: pnpm -r run build
 
