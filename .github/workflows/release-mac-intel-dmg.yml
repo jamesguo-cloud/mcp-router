@@ -30,7 +30,6 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
-      # 🔐 导入 Developer ID Application 证书到临时钥匙串（签名必须）
       - name: Import signing certificate
         shell: bash
         env:
@@ -38,7 +37,6 @@ jobs:
           MAC_CERT_PWD: ${{ secrets.MAC_CERT_PWD }}
         run: |
           set -euxo pipefail
-          echo "$MAC_CERT_P12_BASE4" >/dev/null 2>&1 || true  # 占位防止未使用变量警告
           # 解码 p12
           echo "$MAC_CERT_P12_BASE64" | base64 --decode > certificate.p12
           # 创建临时钥匙串
@@ -47,9 +45,9 @@ jobs:
           security default-keychain -s "$KEYCHAIN"
           security unlock-keychain -p "" "$KEYCHAIN"
           security set-keychain-settings -lut 21600 "$KEYCHAIN"
-          # 导入证书（允许 codesign 和 security 访问）
+          # 导入证书
           security import certificate.p12 -k "$HOME/Library/Keychains/$KEYCHAIN" -P "$MAC_CERT_PWD" -A -T /usr/bin/codesign -T /usr/bin/security
-          # 确认身份可见
+          # 确认身份
           security find-identity -v -p codesigning "$HOME/Library/Keychains/$KEYCHAIN" || true
 
       # 在 monorepo 根目录安装
