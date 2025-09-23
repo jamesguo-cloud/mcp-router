@@ -13,14 +13,23 @@ import * as path from "path";
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 const config: ForgeConfig = {
-  packagerConfig: {
-  asar: true,
-  icon: "./public/images/icon/icon",
-  osxSign: false,      // 禁用签名
-  osxNotarize: false,  // 禁用公证
-  },
+ packagerConfig: {
+    // 签名配置
+    osxSign: {
+      identity: "Developer ID Application", // 自动匹配 Developer ID Application 证书
+      hardenedRuntime: true,
+      entitlements: path.join(__dirname, "entitlements.mac.plist"),
+      "entitlements-inherit": path.join(__dirname, "entitlements.mac.plist"),
+      "gatekeeper-assess": false,
+    },
 
-  
+    // 公证配置
+    osxNotarize: {
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_APP_PWD, // 注意这里用 APPLE_APP_PWD
+      teamId: process.env.APPLE_TEAM_ID,
+    },
+   },
   rebuildConfig: {},
   makers: [
     new MakerSquirrel({
