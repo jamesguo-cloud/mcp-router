@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - "v*"
-  workflow_dispatch:
+  workflow_dispatch:   # 手动触发，方便调试
 
 jobs:
   build-mac-dmg:
@@ -24,13 +24,20 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
-      # 在仓库根目录安装依赖，确保 workspace:* 的包被正确 link
+      # 在 monorepo 根目录安装，保证 workspace:* 的依赖能被 link
       - name: Install dependencies (workspace root)
         run: pnpm install --frozen-lockfile
+
+      # 编译所有 workspace 包，解决 TS2307 报错
+      - name: Build workspace packages
+        run: pnpm -r run build
 
       - name: Build and Make DMG
         working-directory: apps/electron
         run: pnpm make
+
+      - name: List output files (debug)
+        run: ls -R apps/electron/out/make || true
 
       - name: Find DMG
         id: find_dmg
