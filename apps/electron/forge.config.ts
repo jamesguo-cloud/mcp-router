@@ -13,23 +13,29 @@ import * as path from "path";
 require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 const config: ForgeConfig = {
- packagerConfig: {
-    // 签名配置
+  packagerConfig: {
+    // 关键：启用 asar，满足 AutoUnpackNatives 插件要求
+    asar: true,
+
+    // 代码签名（Developer ID Application）
     osxSign: {
-      identity: "Developer ID Application", // 自动匹配 Developer ID Application 证书
+      identity: "Developer ID Application",   // 会匹配钥匙串里的 Developer ID Application
       hardenedRuntime: true,
-      entitlements: path.join(__dirname, "entitlements.mac.plist"),
-      "entitlements-inherit": path.join(__dirname, "entitlements.mac.plist"),
+      // 如无特别需求，可先不带 entitlements 文件，跑通后再加
+      // entitlements: path.join(__dirname, "entitlements.mac.plist"),
+      // "entitlements-inherit": path.join(__dirname, "entitlements.mac.plist"),
       "gatekeeper-assess": false,
     },
 
-    // 公证配置
+    // 公证（使用你 workflow 里的环境变量）
     osxNotarize: {
       appleId: process.env.APPLE_ID,
-      appleIdPassword: process.env.APPLE_APP_PWD, // 注意这里用 APPLE_APP_PWD
+      appleIdPassword: process.env.APPLE_APP_SPECIFIC_PASSWORD,
       teamId: process.env.APPLE_TEAM_ID,
+      // 可选：超时重试等参数
+      // tool: "notarytool",
     },
-   },
+  },
   rebuildConfig: {},
   makers: [
     new MakerSquirrel({
