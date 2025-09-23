@@ -24,8 +24,8 @@ jobs:
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
 
-      - name: Install dependencies
-        working-directory: apps/electron
+      # 在仓库根目录安装依赖，确保 workspace:* 的包被正确 link
+      - name: Install dependencies (workspace root)
         run: pnpm install --frozen-lockfile
 
       - name: Build and Make DMG
