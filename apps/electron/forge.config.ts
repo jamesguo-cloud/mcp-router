@@ -14,8 +14,8 @@ require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 const config: ForgeConfig = {
   packagerConfig: {
     asar: true,
-    osxSign: {
-      identity: "Developer ID Application",
+    osxSign: { 
+      identity: "Developer ID Application: XianQuan Guo (MUFZ22C54K)",
       hardenedRuntime: true,
       entitlements: path.join(__dirname, "entitlements.mac.plist"),
       "entitlements-inherit": path.join(__dirname, "entitlements.mac.plist"),
