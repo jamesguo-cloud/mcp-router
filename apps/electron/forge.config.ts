@@ -14,17 +14,13 @@ require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
 
 const config: ForgeConfig = {
   packagerConfig: {
-    asar: true,
-    icon: "./public/images/icon/icon",
-    osxSign: {
-      identity: process.env.PUBLIC_IDENTIFIER,
-    },
-    osxNotarize: {
-      appleApiKey: process.env.APPLE_API_KEY || "",
-      appleApiKeyId: process.env.APPLE_API_KEY_ID || "",
-      appleApiIssuer: process.env.APPLE_API_ISSUER || "",
-    },
+  asar: true,
+  icon: "./public/images/icon/icon",
+  osxSign: false,      // 禁用签名
+  osxNotarize: false,  // 禁用公证
   },
+
+  
   rebuildConfig: {},
   makers: [
     new MakerSquirrel({
