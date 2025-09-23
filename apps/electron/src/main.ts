@@ -1,5 +1,8 @@
 process.env.ELECTRON_SKIP_SIGNATURE_VERIFICATION = "1";
-
+// 如果在 CI 环境（未签名构建），禁用自动更新
+if (process.env.CI === "true") {
+  process.env.ELECTRON_DISABLE_UPDATER = "1";
+}
 import { app, BrowserWindow, session, shell } from "electron";
 import path from "node:path";
 import { MCPServerManager } from "@/main/modules/mcp-server-manager/mcp-server-manager";
