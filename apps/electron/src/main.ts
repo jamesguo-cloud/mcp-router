@@ -1,3 +1,5 @@
+process.env.ELECTRON_SKIP_SIGNATURE_VERIFICATION = "1";
+
 import { app, BrowserWindow, session, shell } from "electron";
 import path from "node:path";
 import { MCPServerManager } from "@/main/modules/mcp-server-manager/mcp-server-manager";
